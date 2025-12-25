@@ -41,6 +41,7 @@ import {
 import { Card } from "@/components/ui/card";
 import { X, Calendar, FileText, User, Plus, Trash2, Eye, Loader2 } from "lucide-react";
 import { Client } from "@/lib/types";
+import { InvoiceLanguage, LANGUAGE_OPTIONS } from "@/lib/translations";
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
 
@@ -82,6 +83,8 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
     });
     const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null);
     const [isPdfLoading, setIsPdfLoading] = useState(false);
+    const [showPreviewLanguageDialog, setShowPreviewLanguageDialog] = useState(false);
+    const [previewLanguage, setPreviewLanguage] = useState<InvoiceLanguage>("en");
 
     const previewRef = useRef<HTMLDivElement>(null);
     const client = clientId ? getClientById(clientId) : null;
@@ -145,7 +148,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
         } finally {
             setIsPdfLoading(false);
         }
-    }, [invoiceNumber, clientId, currency, note, items, taxRate, isPaid, client, pdfBlobUrl]);
+    }, [invoiceNumber, clientId, currency, note, items, taxRate, isPaid, client, pdfBlobUrl, previewLanguage]);
 
     // Generate PDF when preview is opened
     useEffect(() => {
@@ -461,7 +464,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                         <Button
                             variant="outline"
                             className="flex-1 h-12 text-base bg-white gap-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                            onClick={() => setShowPreview(true)}
+                            onClick={() => setShowPreviewLanguageDialog(true)}
                         >
                             <Eye className="h-4 w-4" />
                             Preview
@@ -475,6 +478,40 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     </div>
                 </div>
             </div>
+
+            {/* Preview Language Selection Dialog */}
+            <Dialog open={showPreviewLanguageDialog} onOpenChange={setShowPreviewLanguageDialog}>
+                <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Preview Language</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-2 py-4">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Choose the language for the invoice preview:
+                        </p>
+                        {LANGUAGE_OPTIONS.map((option) => (
+                            <Button
+                                key={option.code}
+                                variant="outline"
+                                className="w-full justify-start gap-3 h-12 text-base"
+                                onClick={() => {
+                                    setShowPreviewLanguageDialog(false);
+                                    setPreviewLanguage(option.code);
+                                    // Clear old PDF blob to regenerate with new language
+                                    if (pdfBlobUrl) {
+                                        URL.revokeObjectURL(pdfBlobUrl);
+                                        setPdfBlobUrl(null);
+                                    }
+                                    setShowPreview(true);
+                                }}
+                            >
+                                <span className="text-xl">{option.flag}</span>
+                                <span>{option.label}</span>
+                            </Button>
+                        ))}
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             {/* Client Selector Dialog */}
             <Dialog open={showClientSelector} onOpenChange={setShowClientSelector}>
@@ -749,6 +786,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     invoice={invoiceData}
                     client={client || null}
                     companyInfo={companyInfo}
+                    language={previewLanguage}
                 />
             </div>
         </>

@@ -28,6 +28,12 @@ import {
     SheetHeader,
     SheetTitle,
 } from "@/components/ui/sheet";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+} from "@/components/ui/dialog";
 import { ArrowLeft, Check, Edit, MoreVertical, Trash2, Loader2 } from "lucide-react";
 import {
     DropdownMenu,
@@ -35,6 +41,7 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { InvoiceLanguage, LANGUAGE_OPTIONS } from "@/lib/translations";
 import html2canvas from "html2canvas-pro";
 import { jsPDF } from "jspdf";
 
@@ -59,6 +66,10 @@ export function InvoiceView({
     const [isExporting, setIsExporting] = useState(false);
     const [showPreview, setShowPreview] = useState(false);
     const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+    const [showExportDialog, setShowExportDialog] = useState(false);
+    const [showPreviewLanguageDialog, setShowPreviewLanguageDialog] = useState(false);
+    const [exportLanguage, setExportLanguage] = useState<InvoiceLanguage>("en");
+    const [previewLanguage, setPreviewLanguage] = useState<InvoiceLanguage>("en");
     const [pdfBlobUrl, setPdfBlobUrl] = useState<string | null>(null);
     const [isPdfLoading, setIsPdfLoading] = useState(false);
     const previewRef = useRef<HTMLDivElement>(null);
@@ -124,7 +135,7 @@ export function InvoiceView({
         } finally {
             setIsPdfLoading(false);
         }
-    }, [invoice, client, pdfBlobUrl]);
+    }, [invoice, client, pdfBlobUrl, previewLanguage]);
 
     // Generate PDF when preview is opened
     useEffect(() => {
@@ -155,12 +166,26 @@ export function InvoiceView({
         onDelete();
     };
 
-    const handleExportPDF = async () => {
+    const handlePreview = (language: InvoiceLanguage) => {
+        setShowPreviewLanguageDialog(false);
+        setPreviewLanguage(language);
+        // Clear old PDF blob to regenerate with new language
+        if (pdfBlobUrl) {
+            URL.revokeObjectURL(pdfBlobUrl);
+            setPdfBlobUrl(null);
+        }
+        setShowPreview(true);
+    };
+
+    const handleExportPDF = async (language: InvoiceLanguage) => {
+        setShowExportDialog(false);
+        setExportLanguage(language);
         setIsExporting(true);
 
-        try {
-            await new Promise((resolve) => setTimeout(resolve, 100));
+        // Wait for the preview to re-render with new language
+        await new Promise((resolve) => setTimeout(resolve, 300));
 
+        try {
             if (!previewRef.current) {
                 throw new Error("Preview not available");
             }
@@ -359,13 +384,13 @@ export function InvoiceView({
                         <Button
                             variant="outline"
                             className="flex-1 h-12 text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                            onClick={() => setShowPreview(true)}
+                            onClick={() => setShowPreviewLanguageDialog(true)}
                         >
                             Preview
                         </Button>
                         <Button
                             className="flex-1 h-12 text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
-                            onClick={handleExportPDF}
+                            onClick={() => setShowExportDialog(true)}
                             disabled={isExporting}
                         >
                             {isExporting ? "Exporting..." : "Export PDF"}
@@ -373,6 +398,56 @@ export function InvoiceView({
                     </div>
                 </div>
             </div>
+
+            {/* Preview Language Selection Dialog */}
+            <Dialog open={showPreviewLanguageDialog} onOpenChange={setShowPreviewLanguageDialog}>
+                <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Preview Language</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-2 py-4">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Choose the language for the invoice preview:
+                        </p>
+                        {LANGUAGE_OPTIONS.map((option) => (
+                            <Button
+                                key={option.code}
+                                variant="outline"
+                                className="w-full justify-start gap-3 h-12 text-base"
+                                onClick={() => handlePreview(option.code)}
+                            >
+                                <span className="text-xl">{option.flag}</span>
+                                <span>{option.label}</span>
+                            </Button>
+                        ))}
+                    </div>
+                </DialogContent>
+            </Dialog>
+
+            {/* Export Language Selection Dialog */}
+            <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
+                <DialogContent className="sm:max-w-sm">
+                    <DialogHeader>
+                        <DialogTitle>Export Language</DialogTitle>
+                    </DialogHeader>
+                    <div className="space-y-2 py-4">
+                        <p className="text-sm text-muted-foreground mb-4">
+                            Choose the language for your invoice PDF:
+                        </p>
+                        {LANGUAGE_OPTIONS.map((option) => (
+                            <Button
+                                key={option.code}
+                                variant="outline"
+                                className="w-full justify-start gap-3 h-12 text-base"
+                                onClick={() => handleExportPDF(option.code)}
+                            >
+                                <span className="text-xl">{option.flag}</span>
+                                <span>{option.label}</span>
+                            </Button>
+                        ))}
+                    </div>
+                </DialogContent>
+            </Dialog>
 
             {/* Delete Confirmation Dialog */}
             <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
@@ -444,6 +519,7 @@ export function InvoiceView({
                     invoice={invoice}
                     client={client || null}
                     companyInfo={companyInfo}
+                    language={showPreview ? previewLanguage : exportLanguage}
                 />
             </div>
         </>

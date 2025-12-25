@@ -7,16 +7,19 @@ import {
     getTaxAmount,
     getInvoiceTotal,
 } from "@/lib/calculations";
+import { getTranslations, InvoiceLanguage } from "@/lib/translations";
 import { forwardRef } from "react";
 
 interface InvoicePreviewProps {
     invoice: Omit<Invoice, "id" | "createdAt" | "updatedAt"> & { createdAt?: string };
     client: Client | null;
     companyInfo?: CompanyInfo;
+    language?: InvoiceLanguage;
 }
 
 export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
-    function InvoicePreview({ invoice, client, companyInfo }, ref) {
+    function InvoicePreview({ invoice, client, companyInfo, language = "en" }, ref) {
+        const t = getTranslations(language);
         const currencyCode = invoice.currency;
         const subtotal = getInvoiceSubtotal(invoice.items);
         const totalDiscount = getTotalDiscount(invoice.items);
@@ -66,13 +69,13 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                     </div>
                     <div style={{ textAlign: "right" }}>
                         <h2 style={{ fontSize: "28px", fontWeight: "700", margin: 0, color: "#1a1a1a" }}>
-                            INVOICE
+                            {t.invoice}
                         </h2>
                         <p style={{ fontSize: "14px", color: "#666", margin: "4px 0 0 0" }}>
                             {invoiceNum}
                         </p>
                         <p style={{ fontSize: "14px", color: "#666", margin: "2px 0 0 0" }}>
-                            Issued {formatDate(invoice.createdAt)}
+                            {t.issued} {formatDate(invoice.createdAt)}
                         </p>
                     </div>
                 </div>
@@ -81,7 +84,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                 <div style={{ display: "flex", gap: "80px", marginBottom: "48px" }}>
                     <div>
                         <p style={{ fontSize: "11px", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", margin: "0 0 8px 0" }}>
-                            FROM
+                            {t.from}
                         </p>
                         <p style={{ fontSize: "16px", fontWeight: "600", margin: "0 0 4px 0", color: "#1a1a1a" }}>
                             {senderName}
@@ -104,7 +107,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                     </div>
                     <div>
                         <p style={{ fontSize: "11px", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", margin: "0 0 8px 0" }}>
-                            BILL TO
+                            {t.billTo}
                         </p>
                         {client ? (
                             <div>
@@ -129,7 +132,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                             </div>
                         ) : (
                             <p style={{ fontSize: "14px", color: "#999", fontStyle: "italic" }}>
-                                No client selected
+                                {t.noClientSelected}
                             </p>
                         )}
                     </div>
@@ -148,7 +151,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                                     color: "#666",
                                     width: "45%"
                                 }}>
-                                    Description
+                                    {t.description}
                                 </th>
                                 <th style={{
                                     textAlign: "center",
@@ -158,7 +161,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                                     color: "#666",
                                     width: "10%"
                                 }}>
-                                    Qty
+                                    {t.qty}
                                 </th>
                                 <th style={{
                                     textAlign: "right",
@@ -168,7 +171,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                                     color: "#666",
                                     width: "20%"
                                 }}>
-                                    Unit Price
+                                    {t.unitPrice}
                                 </th>
                                 <th style={{
                                     textAlign: "right",
@@ -178,7 +181,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                                     color: "#666",
                                     width: "25%"
                                 }}>
-                                    Amount
+                                    {t.amount}
                                 </th>
                             </tr>
                         </thead>
@@ -186,7 +189,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                             {invoice.items.length === 0 ? (
                                 <tr>
                                     <td colSpan={4} style={{ padding: "24px 8px", textAlign: "center", color: "#999" }}>
-                                        No items added
+                                        {t.noItems}
                                     </td>
                                 </tr>
                             ) : (
@@ -279,19 +282,19 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                         {/* Always show subtotal if there's discount or tax */}
                         {(totalDiscount > 0 || invoice.taxRate > 0) && (
                             <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", fontSize: "14px" }}>
-                                <span style={{ color: "#666" }}>Subtotal</span>
+                                <span style={{ color: "#666" }}>{t.subtotal}</span>
                                 <span style={{ color: "#1a1a1a" }}>{currencyCode} {subtotal.toFixed(2)}</span>
                             </div>
                         )}
                         {totalDiscount > 0 && (
                             <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", fontSize: "14px" }}>
-                                <span style={{ color: "#666" }}>Discount</span>
+                                <span style={{ color: "#666" }}>{t.discount}</span>
                                 <span style={{ color: "#dc2626" }}>-{currencyCode} {totalDiscount.toFixed(2)}</span>
                             </div>
                         )}
                         {invoice.taxRate > 0 && (
                             <div style={{ display: "flex", justifyContent: "space-between", padding: "8px 0", fontSize: "14px" }}>
-                                <span style={{ color: "#666" }}>Tax ({invoice.taxRate}%)</span>
+                                <span style={{ color: "#666" }}>{t.tax} ({invoice.taxRate}%)</span>
                                 <span style={{ color: "#1a1a1a" }}>{currencyCode} {tax.toFixed(2)}</span>
                             </div>
                         )}
@@ -302,7 +305,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                             borderTop: totalDiscount > 0 || invoice.taxRate > 0 ? "1px solid #e5e5e5" : "none",
                             marginTop: totalDiscount > 0 || invoice.taxRate > 0 ? "8px" : "0"
                         }}>
-                            <span style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a" }}>Total</span>
+                            <span style={{ fontSize: "14px", fontWeight: "600", color: "#1a1a1a" }}>{t.total}</span>
                             <span style={{ fontSize: "16px", fontWeight: "700", color: "#1a1a1a" }}>
                                 {currencyCode} {total.toFixed(2)}
                             </span>
@@ -310,11 +313,43 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                     </div>
                 </div>
 
+                {/* Signature Section */}
+                <div style={{ marginTop: "48px", display: "flex", justifyContent: "flex-start" }}>
+                    <div style={{ textAlign: "center", minWidth: "180px" }}>
+                        <img
+                            src="/Signature/Signature.png"
+                            alt="Company Signature"
+                            style={{
+                                height: "60px",
+                                width: "auto",
+                                objectFit: "contain",
+                                marginBottom: "-10px",
+                                display: "block",
+                                marginLeft: "auto",
+                                marginRight: "auto"
+                            }}
+                        />
+                        <div style={{
+                            borderTop: "1px solid #1a1a1a",
+                            paddingTop: "8px",
+                            width: "100%"
+                        }}>
+                            <p style={{
+                                fontSize: "12px",
+                                color: "#666",
+                                margin: 0
+                            }}>
+                                {t.authorizedSignature}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
                 {/* Note */}
                 {invoice.note && (
-                    <div style={{ marginTop: "48px", paddingTop: "24px", borderTop: "1px solid #e5e5e5" }}>
+                    <div style={{ marginTop: "32px", paddingTop: "24px", borderTop: "1px solid #e5e5e5" }}>
                         <p style={{ fontSize: "11px", color: "#888", textTransform: "uppercase", letterSpacing: "0.5px", margin: "0 0 8px 0" }}>
-                            Notes
+                            {t.notes}
                         </p>
                         <p style={{ fontSize: "14px", color: "#666", margin: 0, whiteSpace: "pre-wrap" }}>
                             {invoice.note}
@@ -332,7 +367,7 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                     justifyContent: "flex-end"
                 }}>
                     <p style={{ fontSize: "12px", color: "#999", margin: 0 }}>
-                        Inv. {invoiceNum} &nbsp; 1 of 1
+                        Inv. {invoiceNum} &nbsp; {t.pageOf(1, 1)}
                     </p>
                 </div>
             </div>
