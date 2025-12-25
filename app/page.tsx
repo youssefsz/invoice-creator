@@ -9,7 +9,7 @@ import { InvoiceView } from "@/components/invoice-view";
 import { CompanySettings } from "@/components/company-settings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Plus, FileText, Receipt, Settings } from "lucide-react";
+import { Plus, Settings, MessageSquare } from "lucide-react";
 
 type View = "dashboard" | "create" | "edit" | "view";
 
@@ -140,66 +140,52 @@ export default function Home() {
 
   // Render dashboard
   return (
-    <div className={`min-h-full bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
+    <div className={`relative min-h-[100dvh] bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
       <PageTransition viewKey="dashboard">
         {/* Header */}
-        <header className="sticky top-0 z-10 bg-background border-b">
+        <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md">
           <div className="px-4 py-4 sm:px-6">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center transition-transform duration-200 hover:scale-105 active:scale-95">
-                  <Receipt className="h-5 w-5 text-primary-foreground" />
-                </div>
-                <div>
-                  <h1 className="font-bold text-xl">Invoices</h1>
-                  <p className="text-sm text-muted-foreground">
-                    {invoices.length} total
-                  </p>
-                </div>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setShowSettings(true)}
-                  className="transition-all duration-200 hover:scale-105 active:scale-95"
-                >
-                  <Settings className="h-5 w-5" />
-                </Button>
-                <Button
-                  onClick={handleCreateNew}
-                  size="sm"
-                  className="transition-all duration-200 hover:scale-105 active:scale-95"
-                >
-                  <Plus className="h-4 w-4 mr-1" />
-                  Create
-                </Button>
-              </div>
+              {/* Left: Message Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                className="text-foreground transition-all duration-200 hover:scale-105 active:scale-95"
+              >
+                <MessageSquare className="h-6 w-6 stroke-[1.5]" />
+              </Button>
+
+              {/* Center: Title */}
+              <h1 className="font-bold text-2xl text-center flex-1">Invoices</h1>
+
+              {/* Right: Settings Icon */}
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => setShowSettings(true)}
+                className="text-foreground transition-all duration-200 hover:scale-105 active:scale-95"
+              >
+                <Settings className="h-6 w-6 stroke-[1.5]" />
+              </Button>
             </div>
           </div>
         </header>
 
         {/* Main Content */}
-        <main className="px-4 py-6 sm:px-6">
-          <Tabs value={activeTab} onValueChange={setActiveTab}>
-            <TabsList className="w-full mb-4">
-              <TabsTrigger value="unpaid" className="flex-1 gap-2 transition-all duration-200">
-                <FileText className="h-4 w-4" />
+        <main className="px-4 pb-24 sm:px-6">
+          <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+            <TabsList className="w-full bg-transparent p-0 mb-6 border-b border-transparent rounded-none">
+              <TabsTrigger
+                value="unpaid"
+                className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
+              >
                 Unpaid
-                {unpaidInvoices.length > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-primary text-primary-foreground">
-                    {unpaidInvoices.length}
-                  </span>
-                )}
               </TabsTrigger>
-              <TabsTrigger value="paid" className="flex-1 gap-2 transition-all duration-200">
-                <FileText className="h-4 w-4" />
+              <TabsTrigger
+                value="paid"
+                className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
+              >
                 Paid
-                {paidInvoices.length > 0 && (
-                  <span className="ml-1 px-1.5 py-0.5 text-xs rounded-full bg-muted-foreground/20 text-muted-foreground">
-                    {paidInvoices.length}
-                  </span>
-                )}
               </TabsTrigger>
             </TabsList>
 
@@ -207,6 +193,7 @@ export default function Home() {
               <InvoiceList
                 invoices={unpaidInvoices}
                 onInvoiceClick={handleInvoiceClick}
+                headerTitle="Balance due"
               />
             </TabsContent>
 
@@ -214,11 +201,23 @@ export default function Home() {
               <InvoiceList
                 invoices={paidInvoices}
                 onInvoiceClick={handleInvoiceClick}
+                headerTitle="Total this year"
               />
             </TabsContent>
           </Tabs>
         </main>
+
       </PageTransition>
+
+      {/* Floating Action Button */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-20">
+        <Button
+          onClick={handleCreateNew}
+          className="h-14 rounded-full px-8 shadow-lg text-lg font-medium bg-foreground text-background hover:bg-foreground/90 transition-all duration-200 hover:scale-105 active:scale-95"
+        >
+          Create invoice
+        </Button>
+      </div>
 
       {/* Company Settings Dialog */}
       <CompanySettings

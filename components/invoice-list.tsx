@@ -3,16 +3,38 @@
 import { Invoice, getCurrencySymbol } from "@/lib/types";
 import { getClientById } from "@/lib/storage";
 import { getInvoiceTotal } from "@/lib/calculations";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { ChevronRight, FileText } from "lucide-react";
+import { FileText } from "lucide-react";
+import { differenceInCalendarDays, format } from "date-fns";
+import { useMemo } from "react";
 
 interface InvoiceListProps {
     invoices: Invoice[];
     onInvoiceClick: (invoice: Invoice) => void;
+    headerTitle?: string;
 }
 
-export function InvoiceList({ invoices, onInvoiceClick }: InvoiceListProps) {
+function getDateLabel(dateStr: string) {
+    const date = new Date(dateStr);
+    const today = new Date();
+    const diff = differenceInCalendarDays(today, date);
+
+    if (diff === 0) return "Today";
+    if (diff === 1) return "Yesterday";
+    return format(date, "MMM dd");
+}
+
+export function InvoiceList({ invoices, onInvoiceClick, headerTitle }: InvoiceListProps) {
+    const totalBalance = useMemo(() => {
+        return invoices.reduce((sum, inv) => sum + getInvoiceTotal(inv), 0);
+    }, [invoices]);
+
+    // Group invoices by currency for the balance display? 
+    // For simplicity, we'll assume one currency or just show the total of the first one if mixed,
+    // or better, display mixed currencies? The image shows "Balance due TND900".
+    // We'll use the currency of the first invoice for the total if available, otherwise default.
+    const primaryCurrency = invoices.length > 0 ? invoices[0].currency : "USD";
+    const currencySymbol = getCurrencySymbol(primaryCurrency);
+
     if (invoices.length === 0) {
         return (
             <div className="flex flex-col items-center justify-center py-16 text-center animate-in fade-in-0 duration-300">
@@ -28,53 +50,48 @@ export function InvoiceList({ invoices, onInvoiceClick }: InvoiceListProps) {
     }
 
     return (
-        <div className="space-y-2">
-            {invoices.map((invoice, index) => {
-                const client = getClientById(invoice.clientId);
-                const total = getInvoiceTotal(invoice);
-                const currencySymbol = getCurrencySymbol(invoice.currency);
+        <div className="bg-card rounded-[2rem] shadow-sm overflow-hidden animate-in fade-in-0 duration-300">
+            {headerTitle && (
+                <div className="flex justify-between items-center px-6 py-5 border-b border-border/40 bg-card">
+                    <span className="text-muted-foreground font-medium text-[15px]">{headerTitle}</span>
+                    <span className="text-muted-foreground font-medium text-[15px]">
+                        {currencySymbol} {totalBalance.toFixed(0)}
+                    </span>
+                </div>
+            )}
 
-                return (
-                    <Card
-                        key={invoice.id}
-                        className="p-4 cursor-pointer hover:bg-muted/50 transition-all duration-200 hover:shadow-sm active:scale-[0.99] animate-in fade-in-0 slide-in-from-bottom-2"
-                        style={{ animationDelay: `${index * 50}ms`, animationFillMode: "backwards" }}
-                        onClick={() => onInvoiceClick(invoice)}
-                    >
-                        <div className="flex items-center gap-3">
-                            <div className="flex-1 min-w-0">
-                                <div className="flex items-center gap-2 mb-1">
-                                    <span className="font-medium text-sm">
-                                        {invoice.invoiceNumber}
-                                    </span>
-                                    <Badge
-                                        variant="secondary"
-                                        className={`text-xs transition-colors duration-200 ${invoice.isPaid
-                                            ? "bg-[#d1e4d0] text-green-900 hover:bg-[#d1e4d0]"
-                                            : "bg-amber-200 text-amber-900 hover:bg-amber-200"
-                                            }`}
-                                    >
-                                        {invoice.isPaid ? "Paid" : "Unpaid"}
-                                    </Badge>
-                                </div>
-                                <p className="text-sm text-muted-foreground truncate">
-                                    {client?.name || "Unknown Client"}
-                                </p>
+            <div className="flex flex-col">
+                {invoices.map((invoice, index) => {
+                    const client = getClientById(invoice.clientId);
+                    const total = getInvoiceTotal(invoice);
+                    const symbol = getCurrencySymbol(invoice.currency);
+                    const dateLabel = getDateLabel(invoice.createdAt);
+                    // Extract simplified ID if it's long, or just use it. 
+                    // Assuming invoiceNumber is like "001" or "INV-001".
+                    const displayId = invoice.invoiceNumber.replace(/^INV-/, '');
+
+                    return (
+                        <div
+                            key={invoice.id}
+                            onClick={() => onInvoiceClick(invoice)}
+                            className="flex justify-between items-center px-6 py-4 hover:bg-muted/30 transition-colors cursor-pointer border-b border-border/40 last:border-0 active:bg-muted/50"
+                            style={{ animationDelay: `${index * 50}ms` }}
+                        >
+                            <div className="flex flex-col gap-0.5">
+                                <span className="font-bold text-base text-foreground">
+                                    {client?.name || "Unknown"}
+                                </span>
+                                <span className="text-sm font-medium text-muted-foreground/60">
+                                    {dateLabel} • {displayId}
+                                </span>
                             </div>
-                            <div className="text-right">
-                                <p className="font-semibold">
-                                    {currencySymbol}
-                                    {total.toFixed(2)}
-                                </p>
-                                <p className="text-xs text-muted-foreground">
-                                    {invoice.currency}
-                                </p>
+                            <div className="font-bold text-base text-foreground">
+                                {symbol} {total.toFixed(0)}
                             </div>
-                            <ChevronRight className="h-5 w-5 text-muted-foreground transition-transform duration-200 group-hover:translate-x-0.5" />
                         </div>
-                    </Card>
-                );
-            })}
+                    );
+                })}
+            </div>
         </div>
     );
 }
