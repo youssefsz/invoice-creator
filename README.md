@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Invoice Creator
+
+A professional web application designed to streamline the process of creating, managing, and tracking invoices. This application is built with modern web technologies, focusing on performance, user experience, and visual design.
+
+## Overview
+
+Invoice Creator allows users to easily generate professional invoices, track their payment status, and manage company details. The application features a responsive design with smooth transitions and a clean user interface, making it suitable for freelancers and small businesses.
+
+## Key Features
+
+*   **Dashboard Overview**: A centralized hub to view all invoices, categorized by payment status.
+*   **Invoice Management**: Create, edit, and delete invoices with an intuitive form interface.
+*   **Status Tracking**: Organize invoices into 'Paid' and 'Unpaid' tabs to keep track of finances.
+*   **Company Profile Settings**: Configure and save company information such as name, email, phone, and address for automatic inclusion in invoices.
+*   **PDF Generation**: Export invoices to PDF format for easy sharing with clients.
+*   **Responsive Design**: Fully optimized for various screen sizes, ensuring functionality on desktop and mobile devices.
+*   **Local Persistence**: Data is saved locally, ensuring you do not lose your work between sessions.
+
+## Technology Stack
+
+This project leverages a modern and robust technology stack:
+
+*   **Framework**: Next.js 16 (App Router)
+*   **Language**: TypeScript
+*   **Styling**: Tailwind CSS
+*   **UI Components**: Radix UI (Headless UI primitives) and Lucide React (Icons)
+*   **Form Handling**: React Hook Form and Zod for validation
+*   **PDF Utilities**: jsPDF and html2canvas-pro
 
 ## Getting Started
 
-First, run the development server:
+Follow these steps to set up the project locally.
+
+### Prerequisites
+
+Ensure you have Node.js installed on your machine.
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone <repository_url>
+    ```
+
+2.  Navigate to the project directory:
+    ```bash
+    cd invoice-creator
+    ```
+
+3.  Install dependencies:
+    ```bash
+    npm install
+    # or
+    pnpm install
+    # or
+    yarn install
+    ```
+
+### Running the Application
+
+Start the development server:
 
 ```bash
 npm run dev
 # or
-yarn dev
-# or
 pnpm dev
 # or
-bun dev
+yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000 in your browser to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+*   `app/`: Contains the Next.js App Router pages and layouts.
+*   `components/`: Reusable UI components, including invoice forms, lists, and previewers.
+*   `lib/`: Utility functions, type definitions, and storage logic.
+*   `hooks/`: Custom React hooks.
+*   `public/`: Static assets.
 
-## Learn More
+## Contributing
 
-To learn more about Next.js, take a look at the following resources:
+Contributions to improve the application are welcome. Please ensure that any pull requests maintain the existing code style and structure.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## License
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This project is open source and available for use under standard terms.
