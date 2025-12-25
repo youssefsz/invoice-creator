@@ -48,8 +48,11 @@ export function InvoiceList({ invoices, onInvoiceClick }: InvoiceListProps) {
                                         {invoice.invoiceNumber}
                                     </span>
                                     <Badge
-                                        variant={invoice.isPaid ? "secondary" : "default"}
-                                        className="text-xs transition-colors duration-200"
+                                        variant="secondary"
+                                        className={`text-xs transition-colors duration-200 ${invoice.isPaid
+                                            ? "bg-[#d1e4d0] text-green-900 hover:bg-[#d1e4d0]"
+                                            : "bg-amber-200 text-amber-900 hover:bg-amber-200"
+                                            }`}
                                     >
                                         {invoice.isPaid ? "Paid" : "Unpaid"}
                                     </Badge>
