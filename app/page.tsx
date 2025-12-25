@@ -52,7 +52,7 @@ export default function Home() {
   };
 
   return (
-    <div className="relative min-h-[100dvh] bg-background">
+    <div className="relative min-h-full bg-background">
       {/* Header */}
       <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="px-4 py-4 sm:px-6">

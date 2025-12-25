@@ -337,9 +337,9 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
 
     return (
         <>
-            <div className="flex flex-col min-h-full bg-[#f8f7f4] relative">
+            <div className="flex flex-col min-h-full bg-background relative">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4 bg-[#f8f7f4] sticky top-0 z-10">
+                <div className="flex items-center justify-between p-4 bg-background sticky top-0 z-10">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -359,8 +359,8 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     {!isPaid && (
                         <Popover open={showDueDatePicker} onOpenChange={setShowDueDatePicker}>
                             <PopoverTrigger asChild>
-                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-gray-200 text-sm cursor-pointer hover:bg-gray-50 transition-colors">
-                                    <Calendar className="h-4 w-4 text-gray-500" />
+                                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-card border border-border text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+                                    <Calendar className="h-4 w-4 text-muted-foreground" />
                                     <span>{getDueDateLabel()}</span>
                                 </div>
                             </PopoverTrigger>
@@ -371,7 +371,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                             key={option.value}
                                             className={`w-full text-left px-3 py-2 text-sm rounded-md transition-colors ${dueDate === option.value
                                                 ? "bg-foreground text-background"
-                                                : "hover:bg-gray-100"
+                                                : "hover:bg-muted"
                                                 }`}
                                             onClick={() => {
                                                 setDueDate(option.value);
@@ -387,8 +387,8 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     )}
                     <Popover open={showIssueDatePicker} onOpenChange={setShowIssueDatePicker}>
                         <PopoverTrigger asChild>
-                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-gray-200 text-sm cursor-pointer hover:bg-gray-50 transition-colors">
-                                <Calendar className="h-4 w-4 text-gray-500" />
+                            <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-card border border-border text-sm cursor-pointer hover:bg-muted/50 transition-colors">
+                                <Calendar className="h-4 w-4 text-muted-foreground" />
                                 <span>{formatDateChip(issueDate)}</span>
                             </div>
                         </PopoverTrigger>
@@ -406,8 +406,8 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                             />
                         </PopoverContent>
                     </Popover>
-                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-white border border-gray-200 text-sm">
-                        <FileText className="h-4 w-4 text-gray-500" />
+                    <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-card border border-border text-sm">
+                        <FileText className="h-4 w-4 text-muted-foreground" />
                         <span>{invoiceNum}</span>
                     </div>
                 </div>
@@ -416,14 +416,14 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                 <div className="flex-1 px-4 pb-4 space-y-4">
                     {/* Client Section */}
                     <div className="space-y-1.5">
-                        <Label className="text-sm text-gray-500">Client</Label>
+                        <Label className="text-sm text-muted-foreground">Client</Label>
                         <Card
-                            className="py-3 px-4 bg-white cursor-pointer hover:bg-gray-50 transition-colors"
+                            className="py-3 px-4 bg-card cursor-pointer hover:bg-muted/50 transition-colors"
                             onClick={() => setShowClientSelector(true)}
                         >
                             <div className="flex items-center gap-3">
-                                <User className="h-5 w-5 text-gray-400" />
-                                <span className={client ? "text-foreground" : "text-gray-400"}>
+                                <User className="h-5 w-5 text-muted-foreground" />
+                                <span className={client ? "text-foreground" : "text-muted-foreground"}>
                                     {client?.name || "Select a client"}
                                 </span>
                             </div>
@@ -432,10 +432,10 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
 
                     {/* Items Section */}
                     <div className="space-y-1.5">
-                        <Label className="text-sm text-gray-500">Items</Label>
-                        <Card className="bg-white overflow-hidden">
+                        <Label className="text-sm text-muted-foreground">Items</Label>
+                        <Card className="bg-card overflow-hidden">
                             {items.length === 0 ? (
-                                <div className="py-3 px-4 text-center text-gray-400 text-sm">
+                                <div className="py-3 px-4 text-center text-muted-foreground text-sm">
                                     No items added yet
                                 </div>
                             ) : (
@@ -443,7 +443,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                     {items.map((item, index) => (
                                         <div
                                             key={item.id}
-                                            className={`py-3 px-4 cursor-pointer hover:bg-gray-50 transition-colors ${index !== items.length - 1 ? "border-b border-gray-100" : ""
+                                            className={`py-3 px-4 cursor-pointer hover:bg-muted/50 transition-colors ${index !== items.length - 1 ? "border-b border-border/50" : ""
                                                 }`}
                                             onClick={() => handleEditItem(item)}
                                         >
@@ -452,7 +452,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                                     <p className="font-medium text-foreground truncate">
                                                         {item.name || "Unnamed item"}
                                                     </p>
-                                                    <p className="text-sm text-gray-400">
+                                                    <p className="text-sm text-muted-foreground">
                                                         {item.quantity}
                                                     </p>
                                                 </div>
@@ -464,10 +464,10 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                     ))}
                                 </div>
                             )}
-                            <div className="py-3 px-4 border-t border-gray-100">
+                            <div className="py-3 px-4 border-t border-border/50">
                                 <Button
                                     variant="outline"
-                                    className="gap-2 h-10 px-4 border-gray-200"
+                                    className="gap-2 h-10 px-4 border-border"
                                     onClick={handleAddItem}
                                 >
                                     <Plus className="h-4 w-4" />
@@ -478,12 +478,12 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     </div>
 
                     {/* Total Section */}
-                    <Card className="py-3 px-4 bg-white">
+                    <Card className="py-3 px-4 bg-card">
                         <div className="flex items-center justify-between mb-3">
                             <span className="font-semibold text-lg">Total</span>
                             <div className="flex items-center gap-2">
                                 <Select value={currency} onValueChange={setCurrency}>
-                                    <SelectTrigger className="h-8 w-auto border-gray-200 text-sm gap-1 px-2">
+                                    <SelectTrigger className="h-8 w-auto border-border text-sm gap-1 px-2">
                                         <SelectValue />
                                     </SelectTrigger>
                                     <SelectContent>
@@ -503,7 +503,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="gap-1 h-9 px-3 border-gray-200"
+                                className="gap-1 h-9 px-3 border-border"
                                 onClick={() => setShowDiscountInput(!showDiscountInput)}
                             >
                                 <Plus className="h-3.5 w-3.5" />
@@ -512,7 +512,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                             <Button
                                 variant="outline"
                                 size="sm"
-                                className="gap-1 h-9 px-3 border-gray-200"
+                                className="gap-1 h-9 px-3 border-border"
                                 onClick={() => setShowTaxInput(!showTaxInput)}
                             >
                                 <Plus className="h-3.5 w-3.5" />
@@ -534,7 +534,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                     placeholder="0"
                                     className="w-20 h-9"
                                 />
-                                <span className="text-sm text-gray-500">% Tax Rate</span>
+                                <span className="text-sm text-muted-foreground">% Tax Rate</span>
                             </div>
                         )}
                     </Card>
@@ -544,7 +544,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         placeholder="Notes & Payment Instructions"
-                        className="min-h-[80px] bg-white resize-none py-3 px-4"
+                        className="min-h-[80px] bg-card resize-none py-3 px-4"
                     />
 
                     {/* Delete Button */}
@@ -561,11 +561,11 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                 </div>
 
                 {/* Sticky Bottom Bar */}
-                <div className="sticky bottom-0 left-0 right-0 p-4 bg-[#f8f7f4] border-t border-gray-200/50 z-10 backdrop-blur-sm bg-[#f8f7f4]/95">
+                <div className="sticky bottom-0 left-0 right-0 p-4 bg-background border-t border-border/50 z-10 backdrop-blur-sm bg-background/95">
                     <div className="flex gap-3">
                         <Button
                             variant="outline"
-                            className="flex-1 h-12 text-base bg-white gap-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                            className="flex-1 h-12 text-base bg-card gap-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
                             onClick={() => setShowPreviewLanguageDialog(true)}
                         >
                             <Eye className="h-4 w-4" />
@@ -627,7 +627,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                 key={c.id}
                                 className={`p-3 rounded-xl cursor-pointer transition-colors ${clientId === c.id
                                     ? "bg-foreground text-background"
-                                    : "hover:bg-gray-100"
+                                    : "hover:bg-muted"
                                     }`}
                                 onClick={() => {
                                     setClientId(c.id);
@@ -817,7 +817,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                                 {items.some((i) => i.id === editingItem.id) && (
                                     <Button
                                         variant="outline"
-                                        className="text-red-500 border-red-200 hover:bg-red-50"
+                                        className="text-red-500 border-destructive/30 hover:bg-destructive/10 dark:hover:bg-destructive/20"
                                         onClick={() => {
                                             handleRemoveItem(editingItem.id);
                                             setShowItemEditor(false);
@@ -873,12 +873,12 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     <SheetHeader className="p-4 border-b flex-shrink-0">
                         <SheetTitle>Invoice Preview</SheetTitle>
                     </SheetHeader>
-                    <div className="flex-1 bg-gray-100 relative">
+                    <div className="flex-1 bg-muted relative">
                         {isPdfLoading ? (
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="flex flex-col items-center gap-3">
-                                    <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                                    <p className="text-sm text-gray-500">Generating PDF...</p>
+                                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                                    <p className="text-sm text-muted-foreground">Generating PDF...</p>
                                 </div>
                             </div>
                         ) : pdfBlobUrl ? (
@@ -898,7 +898,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                             />
                         ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <p className="text-sm text-gray-500">Failed to generate PDF preview</p>
+                                <p className="text-sm text-muted-foreground">Failed to generate PDF preview</p>
                             </div>
                         )}
                     </div>

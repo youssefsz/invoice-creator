@@ -316,7 +316,7 @@ export function InvoiceView({
                             <span className="text-muted-foreground">Paid</span>
                             <button
                                 onClick={handleTogglePaid}
-                                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${isPaid ? "bg-green-600" : "bg-gray-400"
+                                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${isPaid ? "bg-green-600" : "bg-muted-foreground/40"
                                     }`}
                             >
                                 <span
@@ -480,12 +480,12 @@ export function InvoiceView({
                     <SheetHeader className="p-4 border-b flex-shrink-0">
                         <SheetTitle>{isPaid ? "Receipt Preview" : "Invoice Preview"}</SheetTitle>
                     </SheetHeader>
-                    <div className="flex-1 bg-gray-100 relative">
+                    <div className="flex-1 bg-muted relative">
                         {isPdfLoading ? (
                             <div className="absolute inset-0 flex items-center justify-center">
                                 <div className="flex flex-col items-center gap-3">
-                                    <Loader2 className="h-8 w-8 animate-spin text-gray-500" />
-                                    <p className="text-sm text-gray-500">Generating PDF...</p>
+                                    <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                                    <p className="text-sm text-muted-foreground">Generating PDF...</p>
                                 </div>
                             </div>
                         ) : pdfBlobUrl ? (
@@ -505,7 +505,7 @@ export function InvoiceView({
                             />
                         ) : (
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <p className="text-sm text-gray-500">Failed to generate PDF preview</p>
+                                <p className="text-sm text-muted-foreground">Failed to generate PDF preview</p>
                             </div>
                         )}
                     </div>
