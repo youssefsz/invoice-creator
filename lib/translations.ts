@@ -20,6 +20,16 @@ export interface InvoiceTranslations {
     authorizedSignature: string;
     noClientSelected: string;
     pageOf: (current: number, total: number) => string;
+    // Receipt-specific translations
+    receipt: string;
+    paymentReceipt: string;
+    receivedFrom: string;
+    paidDate: string;
+    paymentFor: string;
+    amountPaid: string;
+    thankYou: string;
+    paidInFull: string;
+    receiptNumber: string;
 }
 
 const translations: Record<InvoiceLanguage, InvoiceTranslations> = {
@@ -41,6 +51,16 @@ const translations: Record<InvoiceLanguage, InvoiceTranslations> = {
         authorizedSignature: "Authorized Signature",
         noClientSelected: "No client selected",
         pageOf: (current, total) => `${current} of ${total}`,
+        // Receipt-specific translations
+        receipt: "RECEIPT",
+        paymentReceipt: "Payment Receipt",
+        receivedFrom: "RECEIVED FROM",
+        paidDate: "Paid",
+        paymentFor: "Payment For",
+        amountPaid: "Amount Paid",
+        thankYou: "Thank you for your payment!",
+        paidInFull: "PAID IN FULL",
+        receiptNumber: "Receipt #",
     },
     fr: {
         invoice: "FACTURE",
@@ -60,6 +80,16 @@ const translations: Record<InvoiceLanguage, InvoiceTranslations> = {
         authorizedSignature: "Signature Autorisée",
         noClientSelected: "Aucun client sélectionné",
         pageOf: (current, total) => `${current} sur ${total}`,
+        // Receipt-specific translations
+        receipt: "REÇU",
+        paymentReceipt: "Reçu de Paiement",
+        receivedFrom: "REÇU DE",
+        paidDate: "Payé le",
+        paymentFor: "Paiement Pour",
+        amountPaid: "Montant Payé",
+        thankYou: "Merci pour votre paiement!",
+        paidInFull: "PAYÉ EN TOTALITÉ",
+        receiptNumber: "Reçu #",
     },
 };
 

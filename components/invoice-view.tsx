@@ -9,6 +9,7 @@ import {
 } from "@/lib/storage";
 import { getInvoiceTotal, getInvoiceSubtotal, getTotalDiscount, getTaxAmount } from "@/lib/calculations";
 import { InvoicePreview } from "./invoice-preview";
+import { ReceiptPreview } from "./receipt-preview";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import {
@@ -158,6 +159,11 @@ export function InvoiceView({
         if (updatedInvoice) {
             setIsPaid(updatedInvoice.isPaid);
             onStatusChange();
+            // Clear PDF blob so it regenerates with correct format (receipt vs invoice)
+            if (pdfBlobUrl) {
+                URL.revokeObjectURL(pdfBlobUrl);
+                setPdfBlobUrl(null);
+            }
         }
     };
 
@@ -218,7 +224,11 @@ export function InvoiceView({
                 pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
             }
 
-            pdf.save(`${invoice.invoiceNumber}.pdf`);
+            // Use different filename for receipt vs invoice
+            const filename = isPaid
+                ? `${invoice.invoiceNumber.replace("INV-", "REC-")}.pdf`
+                : `${invoice.invoiceNumber}.pdf`;
+            pdf.save(filename);
         } catch (error) {
             console.error("Error exporting PDF:", error);
             alert("Failed to export PDF. Please try again.");
@@ -403,11 +413,11 @@ export function InvoiceView({
             <Dialog open={showPreviewLanguageDialog} onOpenChange={setShowPreviewLanguageDialog}>
                 <DialogContent className="sm:max-w-sm">
                     <DialogHeader>
-                        <DialogTitle>Preview Language</DialogTitle>
+                        <DialogTitle>{isPaid ? "Receipt Preview Language" : "Invoice Preview Language"}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-2 py-4">
                         <p className="text-sm text-muted-foreground mb-4">
-                            Choose the language for the invoice preview:
+                            Choose the language for the {isPaid ? "receipt" : "invoice"} preview:
                         </p>
                         {LANGUAGE_OPTIONS.map((option) => (
                             <Button
@@ -428,11 +438,11 @@ export function InvoiceView({
             <Dialog open={showExportDialog} onOpenChange={setShowExportDialog}>
                 <DialogContent className="sm:max-w-sm">
                     <DialogHeader>
-                        <DialogTitle>Export Language</DialogTitle>
+                        <DialogTitle>{isPaid ? "Export Receipt" : "Export Invoice"}</DialogTitle>
                     </DialogHeader>
                     <div className="space-y-2 py-4">
                         <p className="text-sm text-muted-foreground mb-4">
-                            Choose the language for your invoice PDF:
+                            Choose the language for your {isPaid ? "receipt" : "invoice"} PDF:
                         </p>
                         {LANGUAGE_OPTIONS.map((option) => (
                             <Button
@@ -478,7 +488,7 @@ export function InvoiceView({
             }}>
                 <SheetContent side="bottom" className="h-[90vh] p-0 flex flex-col">
                     <SheetHeader className="p-4 border-b flex-shrink-0">
-                        <SheetTitle>Invoice Preview</SheetTitle>
+                        <SheetTitle>{isPaid ? "Receipt Preview" : "Invoice Preview"}</SheetTitle>
                     </SheetHeader>
                     <div className="flex-1 bg-gray-100 relative">
                         {isPdfLoading ? (
@@ -512,15 +522,25 @@ export function InvoiceView({
                 </SheetContent>
             </Sheet>
 
-            {/* Hidden preview for PDF export */}
+            {/* Hidden preview for PDF export - conditionally render receipt or invoice */}
             <div className="fixed -left-[9999px] top-0">
-                <InvoicePreview
-                    ref={previewRef}
-                    invoice={invoice}
-                    client={client || null}
-                    companyInfo={companyInfo}
-                    language={showPreview ? previewLanguage : exportLanguage}
-                />
+                {isPaid ? (
+                    <ReceiptPreview
+                        ref={previewRef}
+                        invoice={invoice}
+                        client={client || null}
+                        companyInfo={companyInfo}
+                        language={showPreview ? previewLanguage : exportLanguage}
+                    />
+                ) : (
+                    <InvoicePreview
+                        ref={previewRef}
+                        invoice={invoice}
+                        client={client || null}
+                        companyInfo={companyInfo}
+                        language={showPreview ? previewLanguage : exportLanguage}
+                    />
+                )}
             </div>
         </>
     );
