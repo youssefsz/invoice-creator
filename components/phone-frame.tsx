@@ -64,7 +64,7 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
     }, []);
 
     return (
-        <div className="flex w-full h-[100dvh] md:fixed md:inset-0 md:bg-gray-200 dark:md:bg-gray-900 md:items-center md:justify-center overflow-hidden">
+        <div className="flex w-full h-[100dvh] md:fixed md:inset-0  md:items-center md:justify-center overflow-hidden">
             {/* Phone Frame */}
             <div
                 id="phone-frame"
@@ -74,7 +74,7 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
                 className={cn(
                     "relative isolate flex flex-col overflow-hidden transition-transform duration-200 ease-out origin-center",
                     // Mobile Styles (Default)
-                    "w-full h-full border-none bg-background shadow-none",
+                    "w-full h-full border-4 border-[#1a1a1a] bg-background shadow-none",
                     // Desktop Styles (md+)
                     "md:w-[390px] md:h-[844px] md:rounded-[3rem] md:border-[8px] md:border-[#1a1a1a] md:ring-1 md:ring-black/5 dark:md:ring-white/5 md:shadow-2xl"
                 )}

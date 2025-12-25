@@ -156,3 +156,24 @@
     print-color-adjust: exact;
   }
 }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+/* Constrain view transition to phone frame on desktop */
+@media (min-width: 768px) {
+  #phone-frame {
+    contain: paint layout;
+    isolation: isolate;
+  }
+
+  /* Clip view transition to phone frame bounds using inset values from JS */
+  ::view-transition-group(root),
+  ::view-transition-image-pair(root) {
+    clip-path: inset(var(--phone-clip-top, 0) calc(100vw - var(--phone-clip-right, 100vw)) calc(100vh - var(--phone-clip-bottom, 100vh)) var(--phone-clip-left, 0) round var(--phone-border-radius, 0));
+    overflow: hidden;
+  }
+}
