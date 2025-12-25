@@ -54,9 +54,9 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                 className="bg-white text-black relative"
                 style={{
                     fontFamily: "system-ui, -apple-system, sans-serif",
-                    width: "595px",
-                    minHeight: "842px",
-                    padding: "48px",
+                    width: "794px",
+                    minHeight: "1123px",
+                    padding: "40px",
                     boxSizing: "border-box",
                 }}
             >
@@ -361,8 +361,8 @@ export const InvoicePreview = forwardRef<HTMLDivElement, InvoicePreviewProps>(
                 <div style={{
                     position: "absolute",
                     bottom: "24px",
-                    left: "48px",
-                    right: "48px",
+                    left: "40px",
+                    right: "40px",
                     display: "flex",
                     justifyContent: "flex-end"
                 }}>

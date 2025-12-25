@@ -115,12 +115,7 @@ export function InvoiceView({
             const imgWidth = pdfWidth;
             const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            if (imgHeight > pdfHeight) {
-                const ratio = pdfHeight / imgHeight;
-                pdf.addImage(imgData, "PNG", 0, 0, imgWidth * ratio, pdfHeight);
-            } else {
-                pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-            }
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
 
             const blob = pdf.output("blob");
             const url = URL.createObjectURL(blob);
@@ -217,12 +212,7 @@ export function InvoiceView({
             const imgWidth = pdfWidth;
             const imgHeight = (canvas.height * pdfWidth) / canvas.width;
 
-            if (imgHeight > pdfHeight) {
-                const ratio = pdfHeight / imgHeight;
-                pdf.addImage(imgData, "PNG", 0, 0, imgWidth * ratio, pdfHeight);
-            } else {
-                pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
-            }
+            pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
 
             // Use different filename for receipt vs invoice
             const filename = isPaid
