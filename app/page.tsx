@@ -6,10 +6,10 @@ import { getInvoices, getCompanyInfo } from "@/lib/storage";
 import { InvoiceList } from "@/components/invoice-list";
 import { InvoiceForm } from "@/components/invoice-form";
 import { InvoiceView } from "@/components/invoice-view";
-import { CompanySettings } from "@/components/company-settings";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Plus, Settings, MessageSquare } from "lucide-react";
+import Link from "next/link";
 
 type View = "dashboard" | "create" | "edit" | "view";
 
@@ -43,7 +43,6 @@ export default function Home() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [activeTab, setActiveTab] = useState("unpaid");
   const [isTransitioning, setIsTransitioning] = useState(false);
-  const [showSettings, setShowSettings] = useState(false);
 
   const loadInvoices = useCallback(() => {
     setInvoices(getInvoices());
@@ -162,10 +161,12 @@ export default function Home() {
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setShowSettings(true)}
+                asChild
                 className="text-foreground transition-all duration-200 hover:scale-105 active:scale-95"
               >
-                <Settings className="h-6 w-6 stroke-[1.5]" />
+                <Link href="/settings">
+                  <Settings className="h-6 w-6 stroke-[1.5]" />
+                </Link>
               </Button>
             </div>
           </div>
@@ -219,12 +220,7 @@ export default function Home() {
         </Button>
       </div>
 
-      {/* Company Settings Dialog */}
-      <CompanySettings
-        open={showSettings}
-        onOpenChange={setShowSettings}
-        onSave={loadCompanyInfo}
-      />
+
     </div>
   );
 }
