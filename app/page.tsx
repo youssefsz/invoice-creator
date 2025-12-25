@@ -107,7 +107,7 @@ export default function Home() {
   // Render invoice form
   if (currentView === "create" || currentView === "edit") {
     return (
-      <div className={`min-h-screen bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
+      <div className={`min-h-full bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
         <PageTransition viewKey={currentView}>
           <InvoiceForm
             existingInvoice={currentView === "edit" ? selectedInvoice ?? undefined : undefined}
@@ -123,7 +123,7 @@ export default function Home() {
   // Render invoice view
   if (currentView === "view" && selectedInvoice) {
     return (
-      <div className={`min-h-screen bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
+      <div className={`min-h-full bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
         <PageTransition viewKey={`view-${selectedInvoice.id}`}>
           <InvoiceView
             invoice={selectedInvoice}
@@ -140,7 +140,7 @@ export default function Home() {
 
   // Render dashboard
   return (
-    <div className={`min-h-screen bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
+    <div className={`min-h-full bg-background transition-opacity duration-150 ${isTransitioning ? "opacity-0" : "opacity-100"}`}>
       <PageTransition viewKey="dashboard">
         {/* Header */}
         <header className="sticky top-0 z-10 bg-background border-b">

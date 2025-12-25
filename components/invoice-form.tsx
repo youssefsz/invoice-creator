@@ -286,9 +286,9 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
 
     return (
         <>
-            <div className="flex flex-col min-h-screen bg-[#f8f7f4]">
+            <div className="flex flex-col min-h-full bg-[#f8f7f4] relative">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4">
+                <div className="flex items-center justify-between p-4 bg-[#f8f7f4] sticky top-0 z-10">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -339,7 +339,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 px-4 pb-32 space-y-4">
+                <div className="flex-1 px-4 pb-4 space-y-4">
                     {/* Client Section */}
                     <div className="space-y-1.5">
                         <Label className="text-sm text-gray-500">Client</Label>
@@ -486,9 +486,9 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     )}
                 </div>
 
-                {/* Fixed Bottom Bar */}
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-[#f8f7f4]">
-                    <div className="flex gap-3 max-w-lg mx-auto">
+                {/* Sticky Bottom Bar */}
+                <div className="sticky bottom-0 left-0 right-0 p-4 bg-[#f8f7f4] border-t border-gray-200/50 z-10 backdrop-blur-sm bg-[#f8f7f4]/95">
+                    <div className="flex gap-3">
                         <Button
                             variant="outline"
                             className="flex-1 h-12 text-base bg-white gap-2 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
@@ -771,7 +771,7 @@ export function InvoiceForm({ existingInvoice, onClose, onSave, onDelete, compan
                     }
                 }
             }}>
-                <SheetContent side="bottom" className="h-[90vh] p-0 flex flex-col">
+                <SheetContent side="bottom" className="h-[85%] p-0 flex flex-col">
                     <SheetHeader className="p-4 border-b flex-shrink-0">
                         <SheetTitle>Invoice Preview</SheetTitle>
                     </SheetHeader>

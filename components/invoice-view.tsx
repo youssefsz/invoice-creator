@@ -252,9 +252,9 @@ export function InvoiceView({
 
     return (
         <>
-            <div className="flex flex-col min-h-screen bg-background">
+            <div className="flex flex-col min-h-full bg-background relative">
                 {/* Header */}
-                <div className="flex items-center justify-between p-4">
+                <div className="flex items-center justify-between p-4 sticky top-0 z-10 bg-background/95 backdrop-blur-sm border-b supports-[backdrop-filter]:bg-background/60">
                     <Button
                         variant="ghost"
                         size="icon"
@@ -287,7 +287,7 @@ export function InvoiceView({
                 </div>
 
                 {/* Main Content */}
-                <div className="flex-1 px-4 pb-24">
+                <div className="flex-1 px-4 pb-4">
                     {/* Main Invoice Card */}
                     <Card className="p-4 mb-4">
                         {/* Client Name */}
@@ -378,9 +378,9 @@ export function InvoiceView({
                     </div>
                 </div>
 
-                {/* Fixed Bottom Bar */}
-                <div className="fixed bottom-0 left-0 right-0 p-4 bg-background border-t">
-                    <div className="flex gap-3 max-w-lg mx-auto">
+                {/* Sticky Bottom Bar */}
+                <div className="sticky bottom-0 left-0 right-0 p-4 bg-background border-t z-10 backdrop-blur-sm bg-background/95">
+                    <div className="flex gap-3">
                         <Button
                             variant="outline"
                             className="flex-1 h-12 text-base transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
@@ -476,7 +476,7 @@ export function InvoiceView({
                     }
                 }
             }}>
-                <SheetContent side="bottom" className="h-[90vh] p-0 flex flex-col">
+                <SheetContent side="bottom" className="h-[85%] p-0 flex flex-col">
                     <SheetHeader className="p-4 border-b flex-shrink-0">
                         <SheetTitle>{isPaid ? "Receipt Preview" : "Invoice Preview"}</SheetTitle>
                     </SheetHeader>
