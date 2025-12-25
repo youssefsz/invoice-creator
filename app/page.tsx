@@ -11,10 +11,26 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ThemeToggle } from "@/components/theme-toggle";
 
+const TAB_STORAGE_KEY = "invoice-app-active-tab";
+
 export default function Home() {
   const router = useRouter();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [activeTab, setActiveTab] = useState("unpaid");
+
+  // Load tab from localStorage on mount
+  useEffect(() => {
+    const savedTab = localStorage.getItem(TAB_STORAGE_KEY);
+    if (savedTab === "paid" || savedTab === "unpaid") {
+      setActiveTab(savedTab);
+    }
+  }, []);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // Save to localStorage
+    localStorage.setItem(TAB_STORAGE_KEY, value);
+  };
 
   const loadInvoices = useCallback(() => {
     setInvoices(getInvoices());
@@ -64,17 +80,17 @@ export default function Home() {
 
       {/* Main Content */}
       <main className="px-4 pb-24 sm:px-6">
-        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="w-full bg-transparent p-0 mb-6 border-b border-transparent rounded-none">
+        <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
+          <TabsList className="w-full bg-transparent p-0 mb-6 rounded-none h-auto gap-0">
             <TabsTrigger
               value="unpaid"
-              className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground dark:data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
+              className="relative flex-1 rounded-none bg-transparent py-3 text-lg font-medium text-muted-foreground/60 shadow-none transition-colors data-[state=active]:text-foreground data-[state=active]:font-bold data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-muted-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-[3px] after:rounded-full after:bg-foreground after:opacity-0 after:transition-opacity data-[state=active]:after:opacity-100"
             >
               Unpaid
             </TabsTrigger>
             <TabsTrigger
               value="paid"
-              className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground dark:data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
+              className="relative flex-1 rounded-none bg-transparent py-3 text-lg font-medium text-muted-foreground/60 shadow-none transition-colors data-[state=active]:text-foreground data-[state=active]:font-bold data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-muted-foreground after:absolute after:bottom-0 after:left-1/2 after:-translate-x-1/2 after:w-12 after:h-[3px] after:rounded-full after:bg-foreground after:opacity-0 after:transition-opacity data-[state=active]:after:opacity-100"
             >
               Paid
             </TabsTrigger>
