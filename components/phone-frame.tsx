@@ -1,14 +1,34 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
 interface PhoneFrameProps {
     children: React.ReactNode;
 }
 
+function formatTime(date: Date): string {
+    const hours = date.getHours();
+    const minutes = date.getMinutes().toString().padStart(2, "0");
+    return `${hours}:${minutes}`;
+}
+
 export function PhoneFrame({ children }: PhoneFrameProps) {
     const [scale, setScale] = useState(1);
+    const [currentTime, setCurrentTime] = useState<string>("");
+
+    // Update time every minute
+    useEffect(() => {
+        // Set initial time
+        setCurrentTime(formatTime(new Date()));
+
+        // Update every minute
+        const interval = setInterval(() => {
+            setCurrentTime(formatTime(new Date()));
+        }, 60000);
+
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         const calculateScale = () => {
@@ -44,7 +64,7 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
     }, []);
 
     return (
-        <div className="flex w-full h-[100dvh] md:fixed md:inset-0 md:bg-gray-200 md:items-center md:justify-center overflow-hidden">
+        <div className="flex w-full h-[100dvh] md:fixed md:inset-0 md:bg-gray-200 dark:md:bg-gray-900 md:items-center md:justify-center overflow-hidden">
             {/* Phone Frame */}
             <div
                 id="phone-frame"
@@ -56,27 +76,21 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
                     // Mobile Styles (Default)
                     "w-full h-full border-none bg-background shadow-none",
                     // Desktop Styles (md+)
-                    "md:w-[390px] md:h-[844px] md:rounded-[3rem] md:border-[8px] md:border-[#1a1a1a] md:ring-1 md:ring-black/5 md:shadow-2xl"
+                    "md:w-[390px] md:h-[844px] md:rounded-[3rem] md:border-[8px] md:border-[#1a1a1a] md:ring-1 md:ring-black/5 dark:md:ring-white/5 md:shadow-2xl"
                 )}
             >
                 {/* Fake Status Bar - Desktop Only */}
-                <div className="hidden md:flex h-12 bg-[#f8f7f4] z-50 justify-between items-end px-6 pb-2 text-foreground select-none shrink-0 relative border-b border-gray-100/50">
+                <div className="hidden md:flex h-12 bg-background z-50 justify-between items-end px-6 pb-2 text-foreground select-none shrink-0 relative border-b border-border/30">
                     {/* Time */}
-                    <span className="font-semibold text-[15px] leading-none mb-0.5">9:41</span>
+                    <span className="font-semibold text-[15px] leading-none mb-0.5">
+                        {currentTime || "0:00"}
+                    </span>
 
                     {/* Dynamic Island / Notch Placeholder */}
                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120px] h-[35px] bg-[#1a1a1a] rounded-b-3xl"></div>
 
                     {/* Right Icons */}
-                    <div className="flex items-center gap-1.5 grayscale opacity-90">
-                        {/* Signal */}
-                        <svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor">
-                            <path d="M12 2C13.2 2 14.3 2.1 15.4 2.4L19.4 6.4C20.6 7.6 20.6 9.6 19.4 10.8L13.4 16.8C12.6 17.6 11.4 17.6 10.6 16.8L4.6 10.8C3.4 9.6 3.4 7.6 4.6 6.4L8.6 2.4C9.7 2.1 10.8 2 12 2M22 2L2 22M22 22L2 2" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
-                        {/* Wifi */}
-                        <svg width="18" height="12" viewBox="0 0 18 12" fill="currentColor">
-                            <path d="M9 0.5C14.7 0.5 17.6 3.9 17.8 4.2C18.1 4.5 18 5 17.7 5.3L9.6 14.6C9.3 14.9 8.7 14.9 8.4 14.6L0.3 5.3C0 5 -0.1 4.5 0.2 4.2C0.4 3.9 3.3 0.5 9 0.5ZM9 3.2C5.5 3.2 3.6 5.1 3.5 5.3L9 11.7L14.5 5.3C14.4 5.1 12.5 3.2 9 3.2Z" />
-                        </svg>
+                    <div className="flex items-center gap-1.5 opacity-90">
                         {/* Battery */}
                         <div className="w-6 h-3 rounded-[3px] border border-current relative ml-0.5 opacity-80">
                             <div className="absolute top-0.5 bottom-0.5 left-0.5 right-1 bg-current rounded-[1px]" />
@@ -86,7 +100,7 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
                 </div>
 
                 {/* Screen Content */}
-                <div id="phone-viewport" className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent bg-background relative containing-block">
+                <div id="phone-viewport" className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-thin scrollbar-thumb-muted-foreground/20 scrollbar-track-transparent bg-background relative containing-block">
                     {children}
                 </div>
 
@@ -96,3 +110,5 @@ export function PhoneFrame({ children }: PhoneFrameProps) {
         </div>
     );
 }
+
+

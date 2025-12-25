@@ -6,9 +6,10 @@ import { getInvoices } from "@/lib/storage";
 import { InvoiceList } from "@/components/invoice-list";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Settings, MessageSquare } from "lucide-react";
+import { Settings } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default function Home() {
   const router = useRouter();
@@ -40,19 +41,7 @@ export default function Home() {
       <header className="sticky top-0 z-10 bg-background/80 backdrop-blur-md">
         <div className="px-4 py-4 sm:px-6">
           <div className="flex items-center justify-between">
-            {/* Left: Message Icon */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="text-foreground transition-all duration-200 hover:scale-105 active:scale-95"
-            >
-              <MessageSquare className="h-6 w-6 stroke-[1.5]" />
-            </Button>
-
-            {/* Center: Title */}
-            <h1 className="font-bold text-2xl text-center flex-1">Invoices</h1>
-
-            {/* Right: Settings Icon */}
+            {/* Left: Settings Icon */}
             <Button
               variant="ghost"
               size="icon"
@@ -63,6 +52,12 @@ export default function Home() {
                 <Settings className="h-6 w-6 stroke-[1.5]" />
               </Link>
             </Button>
+
+            {/* Center: Title */}
+            <h1 className="font-bold text-2xl text-center flex-1">Invoices</h1>
+
+            {/* Right: Theme Toggle */}
+            <ThemeToggle />
           </div>
         </div>
       </header>
@@ -73,13 +68,13 @@ export default function Home() {
           <TabsList className="w-full bg-transparent p-0 mb-6 border-b border-transparent rounded-none">
             <TabsTrigger
               value="unpaid"
-              className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
+              className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground dark:data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
             >
               Unpaid
             </TabsTrigger>
             <TabsTrigger
               value="paid"
-              className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
+              className="flex-1 rounded-none border-b-2 border-transparent bg-transparent pb-3 pt-2 text-base font-semibold text-muted-foreground shadow-none transition-none data-[state=active]:border-foreground data-[state=active]:text-foreground dark:data-[state=active]:text-foreground data-[state=active]:shadow-none data-[state=active]:bg-transparent hover:text-foreground/80"
             >
               Paid
             </TabsTrigger>

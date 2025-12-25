@@ -316,14 +316,14 @@ export function InvoiceView({
                             <span className="text-muted-foreground">Paid</span>
                             <button
                                 onClick={handleTogglePaid}
-                                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${isPaid ? "bg-foreground" : "bg-gray-300"
+                                className={`relative inline-flex h-7 w-12 items-center rounded-full transition-colors ${isPaid ? "bg-green-600" : "bg-gray-400"
                                     }`}
                             >
                                 <span
-                                    className={`inline-flex h-5 w-5 items-center justify-center rounded-full bg-white transition-transform ${isPaid ? "translate-x-6" : "translate-x-1"
+                                    className={`inline-flex h-5 w-5 items-center justify-center rounded-full bg-white shadow-sm transition-transform ${isPaid ? "translate-x-6" : "translate-x-1"
                                         }`}
                                 >
-                                    {isPaid && <Check className="h-3 w-3 text-foreground" />}
+                                    {isPaid && <Check className="h-3 w-3 text-green-600" />}
                                 </span>
                             </button>
                         </div>
